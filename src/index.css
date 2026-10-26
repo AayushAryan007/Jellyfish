@@ -1,20 +1,103 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Fraunces", Georgia, serif;
-  --font-sans: "Inter", system-ui, sans-serif;
-  --color-deep: #0a1f33;
-  --color-tide: #12324f;
-  --color-glow: #8fe3e0;
-  --color-mist: #d7e6ef;
+  --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-abyss: #000000;
+  --color-trench: #0b0606;
+  --color-ember: #e6392b;
+  --color-glow: #ff5a3c;
+  --color-bone: #f4efec;
+  --color-ash: #8c8481;
+  --color-hairline: rgb(255 90 60 / 0.18);
 }
 
-html, body, #root { height: 100%; }
-body { @apply bg-deep text-mist font-sans antialiased; }
-
-@keyframes drift {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-14px); }
+@utility glass {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.01)),
+    rgb(11 6 6 / 0.55);
+  border: 1px solid var(--color-hairline);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08);
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
 }
-.drift { animation: drift 7s ease-in-out infinite; }
-@media (prefers-reduced-motion: reduce) { .drift { animation: none; } }
+
+@layer base {
+  html { background: #000; color-scheme: dark; }
+  body { @apply bg-abyss font-sans text-bone antialiased; font-feature-settings: "ss01", "cv11"; }
+  ::selection { background: var(--color-ember); color: var(--color-bone); }
+  :focus-visible { outline: 2px solid var(--color-glow); outline-offset: 4px; }
+  img { max-width: 100%; }
+}
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Primary glowing ember button */
+.btn-primary {
+  background: var(--color-ember);
+  color: var(--color-bone);
+  box-shadow: 0 0 28px rgb(230 57 43 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.25);
+}
+.btn-primary:hover { background: var(--color-glow); box-shadow: 0 0 44px rgb(255 90 60 / 0.75), inset 0 1px 0 rgb(255 255 255 / 0.3); }
+
+/* Final headline word fades from bone into ember, as in the references */
+.text-fade-red {
+  background: linear-gradient(95deg, var(--color-bone) 15%, #f2a493 45%, var(--color-ember) 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Pointer-following light inside glass cards */
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgb(230 57 43 / 0.16), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+.spotlight:hover::before { opacity: 1; }
+.spotlight:hover { border-color: rgb(255 90 60 / 0.4); }
+.spotlight > :not(.absolute) { position: relative; }
+
+/* Film grain */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 55;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 1s steps(6) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-4%, 3%); }
+  40% { transform: translate(3%, -5%); }
+  60% { transform: translate(-2%, 6%); }
+  80% { transform: translate(5%, -2%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Custom cursor */
+.cursor {
+  width: 10px; height: 10px; margin: -5px 0 0 -5px;
+  border-radius: 999px;
+  background: var(--color-bone);
+  mix-blend-mode: difference;
+  transition: width 0.35s, height 0.35s, margin 0.35s, background-color 0.35s;
+}
+.cursor-label { opacity: 0; font-size: 0.75rem; font-weight: 500; color: var(--color-bone); transition: opacity 0.2s; }
+.cursor.is-view { width: 64px; height: 64px; margin: -32px 0 0 -32px; background: var(--color-ember); mix-blend-mode: normal; box-shadow: 0 0 30px rgb(230 57 43 / 0.6); }
+.cursor.is-view .cursor-label { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .grain { animation: none; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

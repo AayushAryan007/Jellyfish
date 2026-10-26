@@ -1,23 +1,63 @@
+import { useEffect, useState } from 'react'
+import { useGSAP } from '@gsap/react'
+import { ScrollTrigger, initSmoothScroll } from './lib/motion'
+import { nav } from './data/content'
+import Nav from './components/Nav'
+import DepthGauge from './components/DepthGauge'
+import Cursor from './components/Cursor'
+import Hero from './components/sections/Hero'
+import StatsStrip from './components/sections/StatsStrip'
+import Mission from './components/sections/Mission'
+import Pillars from './components/sections/Pillars'
+import Story from './components/sections/Story'
+import Principles from './components/sections/Principles'
+import Work from './components/sections/Work'
+import Edge from './components/sections/Edge'
+import FinalCTA from './components/sections/FinalCTA'
+import Footer from './components/sections/Footer'
+
 export default function App() {
+  const [active, setActive] = useState(null)
+
+  useEffect(() => {
+    const stop = initSmoothScroll()
+    document.fonts?.ready.then(() => ScrollTrigger.refresh())
+    return () => stop?.()
+  }, [])
+
+  // Highlight the nav pill for whichever section is in the middle of the screen.
+  useGSAP(() => {
+    nav.forEach(({ id }) => {
+      ScrollTrigger.create({
+        trigger: `#${id}`,
+        start: 'top center',
+        end: 'bottom center',
+        onToggle: (self) => self.isActive && setActive(id),
+        onLeaveBack: () => id === 'work' && setActive(null),
+      })
+    })
+    ScrollTrigger.sort()
+  })
+
   return (
-    <main className="min-h-full flex flex-col items-start justify-center px-6 sm:px-16 max-w-4xl mx-auto">
-      <svg className="drift mb-10 w-16 h-20 text-glow" viewBox="0 0 64 80" fill="none" aria-hidden="true">
-        <path d="M6 34C6 18 18 6 32 6s26 12 26 28c0 3-2 4-5 4H11c-3 0-5-1-5-4Z" fill="currentColor" opacity=".85" />
-        <path d="M16 40c0 10-4 14-2 26M26 40c0 12 2 18-1 32M38 40c0 12-2 18 1 32M48 40c0 10 4 14 2 26"
-          stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" opacity=".6" />
-      </svg>
-      <h1 className="font-display text-5xl sm:text-7xl leading-[1.05] text-white">
-        Aayush Aryan
-      </h1>
-      <p className="mt-6 max-w-xl text-lg leading-relaxed text-mist/80">
-        This portfolio is being built. Projects, writing, and ways to get in touch are on the way.
-      </p>
-      <a
-        href="https://github.com/AayushAryan007"
-        className="mt-10 inline-block rounded-full border border-glow/40 px-6 py-3 text-glow transition-colors hover:bg-glow hover:text-deep focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-glow"
-      >
-        View my GitHub
-      </a>
-    </main>
+    <>
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:rounded-full focus:bg-ember focus:px-4 focus:py-2">Skip to content</a>
+      <Nav active={active} />
+      <DepthGauge />
+      <Cursor />
+      <div className="grain" aria-hidden="true" />
+      <main id="main">
+        <Hero />
+        <StatsStrip />
+        <Mission />
+        <Pillars />
+        <Story />
+        <Principles />
+        <Work />
+        <Edge />
+        <FinalCTA />
+      </main>
+      <Footer />
+    </>
   )
 }
