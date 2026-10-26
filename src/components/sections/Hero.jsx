@@ -34,8 +34,10 @@ export default function Hero() {
           <Jellyfish seed={11} speed={0.9} tentacles={20} motes={60} />
         )}
       </div>
-      <div className="hero-jelly pointer-events-none absolute -bottom-[62%] -left-[14%] h-[80%] w-[28%] rotate-[28deg] opacity-75 blur-[1.5px] max-lg:hidden" aria-hidden="true">
-        <Jellyfish seed={27} speed={0.6} tentacles={12} motes={0} intensity={1.1} />
+      <div className="hero-jelly pointer-events-none absolute bottom-0 left-0 h-[42%] w-[30%] [mask-image:linear-gradient(to_bottom,#000_45%,transparent_95%)] max-lg:hidden" aria-hidden="true">
+        <div className="absolute -bottom-[75%] -left-[35%] h-[190%] w-[100%] rotate-[28deg] opacity-75 blur-[1.5px]">
+          <Jellyfish seed={27} speed={0.6} tentacles={12} motes={0} intensity={1.1} />
+        </div>
       </div>
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_50%,rgba(0,0,0,0.75),transparent_60%)] lg:hidden" aria-hidden="true" />
 

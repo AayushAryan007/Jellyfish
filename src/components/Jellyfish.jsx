@@ -68,7 +68,10 @@ export default function Jellyfish({ className = '', seed = 7, speed = 1, intensi
       }
 
       // Halo of light the bell throws into the water.
-      const halo = ctx.createRadialGradient(cx, cy - h * 0.3, 0, cx, cy - h * 0.3, R * 2.8)
+      const hy = cy - h * 0.3
+      // Glow must fade out before it reaches any canvas edge, or the edge shows as a hard rectangle.
+      const haloR = Math.max(1, Math.min(R * 2.8, cx, W - cx, hy, H - hy) * 0.95)
+      const halo = ctx.createRadialGradient(cx, hy, 0, cx, hy, haloR)
       halo.addColorStop(0, `rgba(230,57,43,${0.32 * intensity})`)
       halo.addColorStop(1, 'rgba(230,57,43,0)')
       ctx.fillStyle = halo
@@ -181,5 +184,5 @@ export default function Jellyfish({ className = '', seed = 7, speed = 1, intensi
     return () => { cancelAnimationFrame(raf); ro.disconnect(); io.disconnect() }
   }, [seed, speed, intensity, tentacles, motes])
 
-  return <canvas ref={ref} className={`absolute inset-0 block h-full w-full ${className}`} aria-hidden="true" />
+  return <canvas ref={ref} className={`soft-edges absolute inset-0 block h-full w-full ${className}`} aria-hidden="true" />
 }

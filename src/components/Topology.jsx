@@ -47,7 +47,8 @@ export default function Topology({ progress, className = '' }) {
       const w = R * (1 - 0.12 * squeeze), h = R * (0.78 + 0.12 * squeeze)
       const rim = cy + h * 0.12
 
-      const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 3.2)
+      const haloR = Math.max(1, Math.min(R * 3.2, cx, W - cx, cy, H - cy) * 0.95)
+      const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, haloR)
       halo.addColorStop(0, 'rgba(230,57,43,0.3)'); halo.addColorStop(1, 'rgba(230,57,43,0)')
       ctx.fillStyle = halo; ctx.fillRect(0, 0, W, H)
 
@@ -124,5 +125,5 @@ export default function Topology({ progress, className = '' }) {
     return () => { cancelAnimationFrame(raf); ro.disconnect(); io.disconnect() }
   }, [progress])
 
-  return <canvas ref={ref} className={`absolute inset-0 block h-full w-full ${className}`} role="img" aria-label="A jellyfish whose tentacles connect into a backend architecture: REST API, Django, Auth and SSO, Celery, Redis, MySQL, insurer APIs and an LLM layer." />
+  return <canvas ref={ref} className={`soft-edges absolute inset-0 block h-full w-full ${className}`} role="img" aria-label="A jellyfish whose tentacles connect into a backend architecture: REST API, Django, Auth and SSO, Celery, Redis, MySQL, insurer APIs and an LLM layer." />
 }
