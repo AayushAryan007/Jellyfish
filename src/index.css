@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --color-deep: #0a1f33;
+  --color-tide: #12324f;
+  --color-glow: #8fe3e0;
+  --color-mist: #d7e6ef;
+}
+
+html, body, #root { height: 100%; }
+body { @apply bg-deep text-mist font-sans antialiased; }
+
+@keyframes drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.drift { animation: drift 7s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .drift { animation: none; } }
